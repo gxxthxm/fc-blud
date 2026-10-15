@@ -38,7 +38,7 @@ The rest is still demo data:
 | News & rumors (placeholders) | `js/data/news.js` → `getNews()` | Your news API / RSS proxy |
 | Game features | `js/data/features.js` | — |
 
-**Player images:** set `PLAYER_IMAGE_URL` in `js/data/meta.js` to a URL template containing `{id}` (the CSV's `player_id`). Cards fall back to initials if an image fails to load.
+**Player images:** portraits are hotlinked from EA's FUT Web App by `player_id`, via `PLAYER_IMAGES` in `js/data/meta.js` (one URL template per edition). EA changes the path each year; the comment there explains how to find the new one. Cards fall back to initials if an image fails to load. These are EA's assets, so they're for personal use only.
 
 ## Structure
 

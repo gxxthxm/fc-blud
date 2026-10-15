@@ -2,7 +2,7 @@
 
 import { esc, fmtCoins, fmtPct, debounce } from '../utils.js';
 import { cardsForGame, normalize } from '../data/players.js';
-import { renderMini } from '../components/card.js';
+import { renderMini, avatar } from '../components/card.js';
 
 export const changeBadge = (pct) =>
   `<span class="chg ${pct > 0.05 ? 'up' : pct < -0.05 ? 'down' : 'flat'}">${pct > 0.05 ? '▲' : pct < -0.05 ? '▼' : '•'} ${fmtPct(Math.abs(pct) < 0.05 ? 0 : pct)}</span>`;
@@ -36,7 +36,7 @@ export function attachPicker(input, gameId, onPick, { limit = 8 } = {}) {
     box.hidden = !results.length;
     box.innerHTML = results.map((c, i) => `
       <button type="button" class="pick ${i === sel ? 'sel' : ''}" data-i="${i}">
-        ${renderMini(c)}<span>${esc(c.player.name)}</span>
+        ${renderMini(c)}<span class="pick-name">${avatar(c)}${esc(c.player.name)}</span>
         <span class="muted small">${c.player.pos} · ${esc(c.club)}</span>
       </button>`).join('');
   };

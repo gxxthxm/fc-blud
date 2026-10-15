@@ -3,7 +3,7 @@ import { state, isWatched, toggleWatch } from '../state.js';
 import { gameById, CARD_TYPES, POSITION_GROUPS, groupOf, nationOf } from '../data/meta.js';
 import { cardsForGame, leaguesFor, nationsFor, normalize } from '../data/players.js';
 import { priceInfo, priceHistory } from '../data/market.js';
-import { renderMini, cardHref, statLabels, statClass, stars } from '../components/card.js';
+import { renderMini, avatar, cardHref, statLabels, statClass, stars } from '../components/card.js';
 import { sparkline } from '../components/charts.js';
 import { changeBadge, coins } from './shared.js';
 
@@ -112,8 +112,8 @@ export function render(root, { query }) {
           const spark = priceHistory(c, state.platform).slice(-24 * 7).filter((_, i) => i % 6 === 0).map((x) => x.p);
           return `<tr data-href="${cardHref(c)}">
             <td>${renderMini(c)}</td>
-            <td><a class="pname" href="${cardHref(c)}">${esc(p.name)}</a>
-              <span class="muted small">${nationOf(p.nation).flag} ${esc(c.club)} · ${esc([p.pos, ...p.altPos].join(', '))}${c.age ? ` · ${c.age}y` : ''}</span></td>
+            <td><div class="pcell">${avatar(c)}<div><a class="pname" href="${cardHref(c)}">${esc(p.name)}</a>
+              <span class="muted small">${nationOf(p.nation).flag} ${esc(c.club)} · ${esc([p.pos, ...p.altPos].join(', '))}${c.age ? ` · ${c.age}y` : ''}</span></div></div></td>
             <td>${coins(price)}</td>
             <td>${changeBadge(change24)}</td>
             <td class="hide-sm">${sparkline(spark, { w: 84, h: 26 })}</td>

@@ -1,6 +1,6 @@
 // FUT-style player card and compact row renderers.
 
-import { CARD_TYPES, STAT_LABELS, GK_STAT_LABELS, nationOf, clubShort, PLAYER_IMAGE_URL } from '../data/meta.js';
+import { CARD_TYPES, STAT_LABELS, GK_STAT_LABELS, nationOf, clubShort, playerImageUrl } from '../data/meta.js';
 import { esc, initials } from '../utils.js';
 
 export const statLabels = (card) => (card.player.isGK ? GK_STAT_LABELS : STAT_LABELS);
@@ -13,6 +13,7 @@ export function renderCard(card, { size = 'md', link = true } = {}) {
   const nation = nationOf(p.nation);
   const club = clubShort(card.club);
   const labels = statLabels(card);
+  const img = playerImageUrl(card);
   const tag = link ? 'a' : 'div';
   const href = link ? ` href="${cardHref(card)}"` : '';
   return `
@@ -23,13 +24,23 @@ export function renderCard(card, { size = 'md', link = true } = {}) {
       <div class="fc-flag" title="${esc(nation.name)}">${nation.flag}</div>
       <div class="fc-club">${esc(club)}</div>
     </div>
-    <div class="fc-face" aria-hidden="true"><span>${esc(initials(p.name))}</span>${PLAYER_IMAGE_URL
-      ? `<img src="${esc(PLAYER_IMAGE_URL.replace('{id}', encodeURIComponent(p.id)))}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">` : ''}</div>
+    <div class="fc-face ${img ? 'has-img' : ''}" aria-hidden="true"><span>${esc(initials(p.name))}</span>${img
+      ? `<img src="${esc(img)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="${IMG_FALLBACK}">` : ''}</div>
     <div class="fc-name">${esc(p.name)}</div>
     <div class="fc-stats">
       ${card.stats.map((s, i) => `<div><b>${s}</b><span>${labels[i]}</span></div>`).join('')}
     </div>
   </${tag}>`;
+}
+
+// On a failed image load, drop it and show the initials again.
+const IMG_FALLBACK = "this.parentNode.classList.remove('has-img');this.remove()";
+
+/** Small round headshot (falls back to initials). */
+export function avatar(card) {
+  const img = playerImageUrl(card);
+  return `<span class="avatar ${img ? 'has-img' : ''}" aria-hidden="true"><span>${esc(initials(card.player.name))}</span>${img
+    ? `<img src="${esc(img)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="${IMG_FALLBACK}">` : ''}</span>`;
 }
 
 // Tiny inline card chip used in tables and lists.

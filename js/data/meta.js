@@ -23,9 +23,16 @@ export function setLoadedGames(ids) {
   CURRENT_GAME = LOADED_GAMES[0];
 }
 
-// Optional player image source, keyed by the CSV's player_id. Use a source you have the
-// rights to, e.g. 'https://images.example.com/players/{id}.png'. null = initials only.
-export const PLAYER_IMAGE_URL = null;
+// Player portraits per edition, keyed by the CSV's player_id ({id}). These are EA's FUT Web App
+// assets, hotlinked for personal use. EA changes the GUID/year each edition: open
+// https://www.ea.com/ea-sports-fc/ultimate-team/web-app/, view source, and copy window.fut_guid
+// and window.fut_year. Editions without an entry fall back to initials.
+const EA_CONTENT = 'https://www.ea.com/ea-sports-fc/ultimate-team/web-app/content';
+export const PLAYER_IMAGES = {
+  fc27: `${EA_CONTENT}/27A3C9F1-6B2E-4D7A-8C1F-2E9B5A4D6C7E/2027/fut/items/images/mobile/portraits/{id}.png`,
+};
+export const playerImageUrl = (card) =>
+  PLAYER_IMAGES[card.game]?.replace('{id}', encodeURIComponent(card.player.id)) || null;
 
 // ---- Nations (names as they appear in the CSV) -----------------------------------------
 

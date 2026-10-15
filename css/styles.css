@@ -125,7 +125,16 @@ a.fut-card:hover { transform: translateY(-4px) scale(1.02); filter: brightness(1
 .fc-face { position: absolute; right: 1.4em; top: 1.9em; width: 7.4em; height: 7.4em; border-radius: 50% 50% 46% 46%; display: grid; place-items: center;
   background: radial-gradient(circle at 50% 35%, rgba(255, 255, 255, .55), rgba(255, 255, 255, .08) 70%); box-shadow: inset 0 -1.2em 1.4em rgba(0, 0, 0, .12); }
 .fc-face span { font-size: 2.6em; font-weight: 700; opacity: .75; }
-.fc-face img { position: absolute; inset: -.6em -.4em 0; width: calc(100% + .8em); height: calc(100% + .6em); object-fit: contain; object-position: bottom; }
+.fc-face img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; object-position: bottom; }
+.fc-face.has-img { background: none; box-shadow: none; width: 8.6em; height: 8.6em; right: .9em; top: 1.3em; border-radius: 0; }
+.fc-face.has-img span, .avatar.has-img > span { display: none; }
+.avatar { position: relative; width: 36px; height: 36px; border-radius: 50%; overflow: hidden; flex: none; display: inline-grid; place-items: center;
+  background: var(--panel-2); border: 1px solid var(--line-2); font: 700 .75rem var(--display); color: var(--muted); }
+.avatar img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top; }
+.pcell { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.pcell > div { min-width: 0; }
+.pick-name { display: flex; align-items: center; gap: 8px; font-weight: 600; }
+.pick-name .avatar { width: 26px; height: 26px; }
 .fc-name { position: absolute; top: 7.6em; left: 0; right: 0; text-align: center; font-size: 1.35em; font-weight: 700; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 .8em; letter-spacing: .02em; }
 .fc-stats { position: absolute; top: 12.5em; left: 1.6em; right: 1.6em; display: grid; grid-template-columns: repeat(3, 1fr); row-gap: .3em; border-top: .1em solid currentColor; padding-top: .55em; }
 .fc-stats div { display: flex; gap: .35em; justify-content: center; align-items: baseline; }
