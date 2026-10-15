@@ -1,6 +1,6 @@
 import { esc } from '../utils.js';
 import { state, setState } from '../state.js';
-import { GAMES } from '../data/meta.js';
+import { LOADED_GAMES, gameById } from '../data/meta.js';
 
 export function render(root) {
   root.innerHTML = `
@@ -20,7 +20,7 @@ export function render(root) {
   <section class="panel settings">
     <h3>Defaults</h3>
     <div class="field-row">
-      <label>Game <select id="game">${GAMES.map((g) => `<option value="${g.id}" ${g.id === state.game ? 'selected' : ''}>${esc(g.name)}</option>`).join('')}</select></label>
+      <label>Game <select id="game">${LOADED_GAMES.map(gameById).map((g) => `<option value="${g.id}" ${g.id === state.game ? 'selected' : ''}>${esc(g.name)}</option>`).join('')}</select></label>
       <label>Platform <select id="platform"><option value="console" ${state.platform === 'console' ? 'selected' : ''}>Console</option><option value="pc" ${state.platform === 'pc' ? 'selected' : ''}>PC</option></select></label>
     </div>
   </section>

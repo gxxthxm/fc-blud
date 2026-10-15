@@ -1,18 +1,18 @@
 import { esc } from '../utils.js';
 import { state } from '../state.js';
-import { GAMES, gameById } from '../data/meta.js';
+import { gameById } from '../data/meta.js';
 import { FEATURES } from '../data/features.js';
 import { mountVideos, topicsForFeature } from '../lib/videos.js';
 
 export function render(root, { params }) {
-  const gameId = FEATURES[params[0]] ? params[0] : state.game;
+  const gameId = FEATURES[params[0]] ? params[0] : FEATURES[state.game] ? state.game : Object.keys(FEATURES)[0];
   const game = gameById(gameId);
   const feats = FEATURES[gameId] || [];
   const selected = feats.find((f) => f.id === params[1]) || null;
 
   root.innerHTML = `
   <div class="page-head"><div><h1>Game features</h1><p class="muted">What's new in each edition — pick a feature for guides and videos</p></div></div>
-  <div class="tabs">${GAMES.map((g) => `<a href="#/features/${g.id}" class="${g.id === gameId ? 'on' : ''}">${esc(g.short)}</a>`).join('')}</div>
+  <div class="tabs">${Object.keys(FEATURES).map(gameById).map((g) => `<a href="#/features/${g.id}" class="${g.id === gameId ? 'on' : ''}">${esc(g.short)}</a>`).join('')}</div>
   <div class="feature-layout ${selected ? 'has-detail' : ''}">
     <div class="feature-grid">
       ${feats.map((f) => `

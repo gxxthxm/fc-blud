@@ -1,8 +1,7 @@
 // Bits shared across views: price/change cells, player picker, demo-data notice.
 
 import { esc, fmtCoins, fmtPct, debounce } from '../utils.js';
-import { cardsForGame } from '../data/players.js';
-import { CARD_TYPES } from '../data/meta.js';
+import { cardsForGame, normalize } from '../data/players.js';
 import { renderMini } from '../components/card.js';
 
 export const changeBadge = (pct) =>
@@ -14,14 +13,14 @@ export const demoNote = (what) =>
   `<div class="demo-note"><b>Demo data</b> ${esc(what)}</div>`;
 
 export function searchCards(gameId, q, limit = 8) {
-  const s = q.trim().toLowerCase();
+  const s = normalize(q.trim());
   if (!s) return [];
-  const norm = (x) => x.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
-  const ns = norm(s);
-  return cardsForGame(gameId)
-    .filter((c) => norm(c.player.name).includes(ns) || norm(c.player.fullName).includes(ns))
-    .sort((a, b) => b.ovr - a.ovr)
-    .slice(0, limit);
+  const out = [];
+  for (const c of cardsForGame(gameId)) { // sorted by rating, so the first hits are the best
+    if (c.player.search.includes(s)) out.push(c);
+    if (out.length >= limit) break;
+  }
+  return out;
 }
 
 /** Attaches a type-ahead to `input`; calls onPick(card) when a result is chosen. */
@@ -38,7 +37,7 @@ export function attachPicker(input, gameId, onPick, { limit = 8 } = {}) {
     box.innerHTML = results.map((c, i) => `
       <button type="button" class="pick ${i === sel ? 'sel' : ''}" data-i="${i}">
         ${renderMini(c)}<span>${esc(c.player.name)}</span>
-        <span class="muted small">${esc(CARD_TYPES[c.type].label)} · ${esc(c.club)}</span>
+        <span class="muted small">${c.player.pos} · ${esc(c.club)}</span>
       </button>`).join('');
   };
   input.addEventListener('input', debounce(() => { results = searchCards(gameId(), input.value, limit); sel = -1; draw(); }, 120));

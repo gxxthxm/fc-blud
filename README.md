@@ -4,8 +4,8 @@ A FUTBIN-style companion web app for EA SPORTS FC and FIFA. It's plain HTML, CSS
 
 ## Features
 
-- **Player database**: every base and promo card for FIFA 23 → FC 26. You can filter by position, league, nation, card type, rating, skill moves and weak foot, and sort by price, 24h change or any face stat.
-- **Player pages**: FUT card, detailed stats, PlayStyles, a price chart (24h / 7d / 30d), other versions of the card, ratings across games, and similar players.
+- **Player database**: all 19,789 FC 27 players from `players.csv`. You can filter by position, league, club, nation, card tier, rating, skill moves, weak foot and PlayStyle, and sort by price, 24h change, age or any face stat.
+- **Player pages**: FUT card, all detailed attributes, PlayStyles, a price chart (24h / 7d / 30d), best attributes, ratings across editions (when the CSV has several), and similar players.
 - **Transfer market**: market index, risers and fallers, most expensive cards, best-value cards, a league heatmap, a watchlist and trading tips.
 - **News, rumors & leaks**: a feed with a community-confidence meter and the players each story mentions.
 - **Game features**: what's new in each edition (Rush, FC IQ, PlayStyles, Evolutions, …).
@@ -23,16 +23,22 @@ Then open http://localhost:5173. Any static file server works. The app needs a s
 
 ## Data
 
-The bundled data is **demo data**:
+Players are loaded at startup from **`players.csv`** (19,789 players, FC 27, men and women).
+
+- One row = one player in one edition (`edition` column, e.g. `fc27`). Add rows for other editions, or more files to `DATA_FILES` in `js/data/players.js`, and the game selector picks them up.
+- Required columns: `player_id, overall_rating, position, club, league, nationality, pace, shooting, passing, dribbling, defending, physicality`. Everything else (names, alt positions, foot, skills, weak foot, PlayStyles, detailed attributes, birthdate) is used when present.
+- For goalkeepers, the six face-stat columns hold DIV / HAN / KIC / REF / SPD / POS.
+- Cards are Gold (75+), Silver (65–74) or Bronze (≤64).
+
+The rest is still demo data:
 
 | What | File | Replace with |
 | --- | --- | --- |
-| Players & ratings (approximate, not official) | `js/data/players.js` | Your player DB / API |
-| Prices (simulated random walk) | `js/data/market.js` → `priceHistory()` | A live price feed |
+| Prices (simulated; the CSV has none) | `js/data/market.js` → `priceInfo()` / `priceHistory()` | A live price feed |
 | News & rumors (placeholders) | `js/data/news.js` → `getNews()` | Your news API / RSS proxy |
 | Game features | `js/data/features.js` | — |
 
-To add a new game (e.g. FC 27), add it to `GAMES` in `js/data/meta.js`, add the ratings to `players.js`, and add its features to `features.js`.
+**Player images:** set `PLAYER_IMAGE_URL` in `js/data/meta.js` to a URL template containing `{id}` (the CSV's `player_id`). Cards fall back to initials if an image fails to load.
 
 ## Structure
 

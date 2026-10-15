@@ -1,6 +1,6 @@
 import { esc, fmtCoins } from '../utils.js';
 import { state, toggleWatch } from '../state.js';
-import { gameById, CARD_TYPES, CURRENT_GAME } from '../data/meta.js';
+import { gameById, CURRENT_GAME } from '../data/meta.js';
 import { cardById } from '../data/players.js';
 import { marketIndex, movers, priceHistory, priceInfo } from '../data/market.js';
 import { renderMini, cardHref } from '../components/card.js';
@@ -93,7 +93,7 @@ export function render(root, { query }) {
   const row = (m, i) => `
     <tr>
       <td class="muted">${i + 1}</td><td>${renderMini(m.card)}</td>
-      <td><a class="pname" href="${cardHref(m.card)}">${esc(m.card.player.name)}</a><span class="muted small">${esc(CARD_TYPES[m.card.type].label)}</span></td>
+      <td><a class="pname" href="${cardHref(m.card)}">${esc(m.card.player.name)}</a><span class="muted small">${esc(m.card.club)}</span></td>
       <td>${coins(m.price)}</td><td>${changeBadge(m.change24)}</td>
       <td class="hide-sm">${sparkline(priceHistory(m.card, state.platform).slice(-48).map((x) => x.p), { w: 80, h: 24 })}</td>
     </tr>`;
@@ -119,7 +119,7 @@ export function render(root, { query }) {
     el.innerHTML = `<div class="table-wrap"><table class="ptable compact"><tbody>
       ${items.map((c) => {
         const m = priceInfo(c, state.platform);
-        return `<tr><td>${renderMini(c)}</td><td><a class="pname" href="${cardHref(c)}">${esc(c.player.name)}</a><span class="muted small">${esc(gameById(c.game).short)} · ${esc(CARD_TYPES[c.type].label)}</span></td>
+        return `<tr><td>${renderMini(c)}</td><td><a class="pname" href="${cardHref(c)}">${esc(c.player.name)}</a><span class="muted small">${esc(gameById(c.game).short)} · ${esc(c.club)}</span></td>
           <td>${coins(m.price)}</td><td>${changeBadge(m.change24)}</td>
           <td><button class="icon-btn watch on" data-unwatch="${c.id}" aria-label="Remove from watchlist">★</button></td></tr>`;
       }).join('')}

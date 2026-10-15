@@ -1,6 +1,5 @@
 import { esc, toQuery } from '../utils.js';
 import { state } from '../state.js';
-import { CARD_TYPES } from '../data/meta.js';
 import { cardById } from '../data/players.js';
 import { priceInfo, metaScore } from '../data/market.js';
 import { renderCard, statLabels, stars } from '../components/card.js';
@@ -44,7 +43,8 @@ export function render(root, { query }) {
               ${rows.map(([label, va, vb, fmt]) => `<tr>
                 <td class="${va > vb ? 'win' : ''}">${fmt ? fmt(va) : va}</td><th>${esc(label)}</th><td class="${vb > va ? 'win' : ''}">${fmt ? fmt(vb) : vb}</td></tr>`).join('')}
               <tr><td class="${pa < pb ? 'win' : ''}">${coins(pa)}</td><th>Price</th><td class="${pb < pa ? 'win' : ''}">${coins(pb)}</td></tr>
-              <tr><td>${esc(CARD_TYPES[a.type].label)}</td><th>Card</th><td>${esc(CARD_TYPES[b.type].label)}</td></tr>
+              <tr><td>${esc(a.club)}</td><th>Club</th><td>${esc(b.club)}</td></tr>
+              <tr><td>${a.age ?? '—'}</td><th>Age</th><td>${b.age ?? '—'}</td></tr>
             </tbody>
           </table>
           <p class="muted small">Cheaper price wins its row. Stat labels differ when comparing a GK with an outfield player.</p>

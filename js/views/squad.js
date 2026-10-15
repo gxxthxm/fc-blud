@@ -1,6 +1,6 @@
 import { esc, fmtCoins } from '../utils.js';
 import { state, setState } from '../state.js';
-import { gameById, CARD_TYPES } from '../data/meta.js';
+import { gameById } from '../data/meta.js';
 import { cardById, cardsForGame } from '../data/players.js';
 import { priceInfo } from '../data/market.js';
 import { renderCard, renderMini, cardHref } from '../components/card.js';
@@ -112,7 +112,7 @@ export function render(root, { query }) {
   const autoFill = () => {
     const f = FORMATIONS[squad.formation];
     const used = new Set();
-    const pool = cardsForGame(game.id).sort((a, b) => b.ovr - a.ovr);
+    const pool = cardsForGame(game.id); // sorted by rating
     squad.slots = {};
     f.forEach(([pos], i) => {
       const c = pool.find((x) => !used.has(x.player.id) && inPosition(x, pos));
@@ -126,7 +126,7 @@ export function render(root, { query }) {
     const taken = new Set(Object.entries(squad.slots).filter(([k]) => +k !== i).map(([, id]) => cardById(id)?.player.id));
     const suggestions = cardsForGame(game.id)
       .filter((c) => inPosition(c, pos) && !taken.has(c.player.id))
-      .sort((a, b) => b.ovr - a.ovr).slice(0, 8);
+      .slice(0, 8);
     const modal = document.getElementById('modal');
     modal.innerHTML = `
       <div class="modal-box" role="dialog" aria-label="Choose ${pos}">
@@ -135,7 +135,7 @@ export function render(root, { query }) {
         <div class="field"><input id="slotSearch" type="search" placeholder="Search any player…" autocomplete="off"></div>
         <h4>Top ${pos}s</h4>
         <div class="suggest">${suggestions.map((c) => `<button class="pick" data-card="${c.id}">${renderMini(c)}<span>${esc(c.player.name)}</span>
-          <span class="muted small">${esc(CARD_TYPES[c.type].short)} · ${fmtCoins(priceInfo(c, state.platform).price)}</span></button>`).join('') || '<p class="muted">No cards for this position.</p>'}</div>
+          <span class="muted small">${esc(c.club)} · ${fmtCoins(priceInfo(c, state.platform).price)}</span></button>`).join('') || '<p class="muted">No cards for this position.</p>'}</div>
         ${current ? `<button class="btn danger mt" id="removeSlot">Remove ${esc(current.player.name)}</button>` : ''}
       </div>`;
     modal.hidden = false;

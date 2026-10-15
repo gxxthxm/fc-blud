@@ -1,9 +1,9 @@
 // App shell: header controls, hash router, global search and modal handling.
 
-import { $, parseQuery } from './utils.js';
+import { $, esc, parseQuery } from './utils.js';
 import { state, setState, subscribe } from './state.js';
-import { GAMES } from './data/meta.js';
-import { cardById, baseCard } from './data/players.js';
+import { LOADED_GAMES, CURRENT_GAME, gameById } from './data/meta.js';
+import { cardById, baseCard, loadData, DATA_FILES } from './data/players.js';
 import { cardHref } from './components/card.js';
 import { attachPicker } from './views/shared.js';
 import * as home from './views/home.js';
@@ -61,7 +61,6 @@ function syncHeader() {
 }
 
 // Header controls
-$('#gameSelect').innerHTML = GAMES.map((g) => `<option value="${g.id}">${g.short}</option>`).join('');
 $('#gameSelect').addEventListener('change', (e) => {
   const game = e.target.value;
   // On a player page, jump to the same player's card in the newly selected game.
@@ -110,5 +109,20 @@ subscribe((patch) => {
   }
 });
 
-window.addEventListener('hashchange', route);
-route();
+async function boot() {
+  main.innerHTML = '<div class="panel empty"><div class="spinner"></div><p class="muted">Loading player database…</p></div>';
+  try {
+    await loadData();
+  } catch (err) {
+    console.error(err);
+    const fileHint = location.protocol === 'file:' ? ' Open the app through a local server (see README) — browsers block loading files from file://.' : '';
+    main.innerHTML = `<div class="panel empty"><h2>Couldn't load the player database</h2><p class="muted">${esc(err.message)}.${fileHint}</p><p class="small muted">Expected: ${esc(DATA_FILES.join(', '))} next to index.html</p></div>`;
+    return;
+  }
+  if (!LOADED_GAMES.includes(state.game)) setState({ game: CURRENT_GAME }, { silent: true });
+  $('#gameSelect').innerHTML = LOADED_GAMES.map((g) => `<option value="${g}">${esc(gameById(g).short)}</option>`).join('');
+  $('#gameSelect').disabled = LOADED_GAMES.length < 2;
+  window.addEventListener('hashchange', route);
+  route();
+}
+boot();

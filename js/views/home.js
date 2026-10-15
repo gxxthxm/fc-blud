@@ -1,6 +1,6 @@
-import { esc, timeAgo } from '../utils.js';
+import { esc, timeAgo, fmtNum } from '../utils.js';
 import { state } from '../state.js';
-import { gameById, CARD_TYPES } from '../data/meta.js';
+import { gameById } from '../data/meta.js';
 import { cardsForGame, cardById } from '../data/players.js';
 import { marketIndex, movers } from '../data/market.js';
 import { getNews, NEWS_KINDS } from '../data/news.js';
@@ -19,14 +19,16 @@ export function render(root) {
   const mv = movers(state.platform, game.id).filter((m) => m.price >= 1000);
   const risers = [...mv].sort((a, b) => b.change24 - a.change24).slice(0, 5);
   const fallers = [...mv].sort((a, b) => a.change24 - b.change24).slice(0, 5);
-  const promos = cards.filter((c) => !['gold', 'icon'].includes(c.type)).sort((a, b) => b.ovr - a.ovr).slice(0, 10);
+  const topMen = cards.filter((c) => !c.player.isWomen).slice(0, 12);
+  const topWomen = cards.filter((c) => c.player.isWomen).slice(0, 12);
   const news = getNews().slice(0, 5);
-  const feats = FEATURES[game.id] || [];
+  const featGame = FEATURES[game.id] ? game.id : Object.keys(FEATURES)[0];
+  const feats = FEATURES[featGame] || [];
   const players = new Set(cards.map((c) => c.player.id)).size;
 
   const moverRow = (m) => `
     <a class="mover" href="${cardHref(m.card)}">
-      ${renderMini(m.card)}<span class="mv-name">${esc(m.card.player.name)}<small>${esc(CARD_TYPES[m.card.type].short)}</small></span>
+      ${renderMini(m.card)}<span class="mv-name">${esc(m.card.player.name)}<small>${esc(m.card.club)}</small></span>
       ${coins(m.price)} ${changeBadge(m.change24)}
     </a>`;
 
@@ -35,12 +37,12 @@ export function render(root) {
     <div>
       <p class="eyebrow">${esc(game.name)} companion</p>
       <h1>Every card, every price, every rumor.</h1>
-      <p class="muted">Player database across ${'FIFA 23 → FC 26'}, live-style market trends, news &amp; leaks, squad builder — and video picks for whatever you're looking at.</p>
-      <div class="hero-search"><input id="heroSearch" type="search" placeholder="Search ${players} players… try “Mbappé” or “Bonmatí”" autocomplete="off" aria-label="Search players"></div>
+      <p class="muted">${fmtNum(players)} players from your database, market trends, news &amp; leaks, a squad builder, and video picks for whatever you're looking at.</p>
+      <div class="hero-search"><input id="heroSearch" type="search" placeholder="Search ${fmtNum(players)} players… try “Mbappé” or “Bonmatí”" autocomplete="off" aria-label="Search players"></div>
     </div>
     <div class="hero-stats">
-      <div class="stat-tile"><span>Players</span><b>${players}</b></div>
-      <div class="stat-tile"><span>Cards in ${esc(game.short)}</span><b>${cards.length}</b></div>
+      <div class="stat-tile"><span>Players</span><b>${fmtNum(players)}</b></div>
+      <div class="stat-tile"><span>Leagues</span><b>${new Set(cards.map((c) => c.league)).size}</b></div>
       <div class="stat-tile"><span>Market index</span><b>${idxNow.toFixed(1)}</b>${changeBadge(idxChg)}</div>
     </div>
   </section>
@@ -68,16 +70,20 @@ export function render(root) {
   </div>
 
   <section class="panel">
-    <div class="panel-head"><h3>Latest promo cards</h3><a href="#/players?type=promo" class="small">Browse all →</a></div>
-    <div class="card-row">${promos.map((c) => renderCard(c, { size: 'sm' })).join('')}</div>
+    <div class="panel-head"><h3>Top rated · ${esc(game.short)}</h3><a href="#/players?gender=M" class="small">Browse all →</a></div>
+    <div class="card-row">${topMen.map((c) => renderCard(c, { size: 'sm' })).join('')}</div>
   </section>
+  ${topWomen.length ? `<section class="panel">
+    <div class="panel-head"><h3>Top rated women</h3><a href="#/players?gender=W" class="small">Browse all →</a></div>
+    <div class="card-row">${topWomen.map((c) => renderCard(c, { size: 'sm' })).join('')}</div>
+  </section>` : ''}
 
   ${feats.length ? `
   <section class="panel">
-    <div class="panel-head"><h3>New in ${esc(game.short)}</h3><a href="#/features/${game.id}" class="small">All features →</a></div>
+    <div class="panel-head"><h3>New in ${esc(gameById(featGame).short)}</h3><a href="#/features/${featGame}" class="small">All features →</a></div>
     <div class="feature-grid">
       ${feats.slice(0, 3).map((f) => `
-        <a class="feature-tile" href="#/features/${game.id}/${f.id}">
+        <a class="feature-tile" href="#/features/${featGame}/${f.id}">
           <span class="tag">${esc(f.tag)}</span><b>${esc(f.name)}</b><p class="muted small">${esc(f.summary)}</p>
         </a>`).join('')}
     </div>
@@ -90,5 +96,5 @@ export function render(root) {
 
   const watched = state.watchlist.map(cardById).find((c) => c && c.game === game.id);
   if (watched) mountVideos(root.querySelector('#homeVideos'), topicsForCard(watched), { title: `Because you're watching ${watched.player.name}` });
-  else if (feats[0]) mountVideos(root.querySelector('#homeVideos'), topicsForFeature(feats[0], game.id), { title: `Get started with ${feats[0].name}` });
+  else if (feats[0]) mountVideos(root.querySelector('#homeVideos'), topicsForFeature(feats[0], featGame), { title: `Get started with ${feats[0].name}` });
 }

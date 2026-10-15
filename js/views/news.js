@@ -44,7 +44,7 @@ export function render(root, { query }) {
       detail.innerHTML = `<div class="panel muted center">Select a story to see the players involved and related videos.</div>`;
       return;
     }
-    const cards = selected.players.map((id) => baseCard(id, state.game) || baseCard(id, 'fc26')).filter(Boolean);
+    const cards = selected.players.map((id) => baseCard(id, state.game) || baseCard(id)).filter(Boolean);
     const [fGame, fId] = (selected.feature || '').split('/');
     detail.innerHTML = `
       <div class="panel">

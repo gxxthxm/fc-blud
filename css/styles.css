@@ -125,6 +125,7 @@ a.fut-card:hover { transform: translateY(-4px) scale(1.02); filter: brightness(1
 .fc-face { position: absolute; right: 1.4em; top: 1.9em; width: 7.4em; height: 7.4em; border-radius: 50% 50% 46% 46%; display: grid; place-items: center;
   background: radial-gradient(circle at 50% 35%, rgba(255, 255, 255, .55), rgba(255, 255, 255, .08) 70%); box-shadow: inset 0 -1.2em 1.4em rgba(0, 0, 0, .12); }
 .fc-face span { font-size: 2.6em; font-weight: 700; opacity: .75; }
+.fc-face img { position: absolute; inset: -.6em -.4em 0; width: calc(100% + .8em); height: calc(100% + .6em); object-fit: contain; object-position: bottom; }
 .fc-name { position: absolute; top: 7.6em; left: 0; right: 0; text-align: center; font-size: 1.35em; font-weight: 700; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 .8em; letter-spacing: .02em; }
 .fc-stats { position: absolute; top: 12.5em; left: 1.6em; right: 1.6em; display: grid; grid-template-columns: repeat(3, 1fr); row-gap: .3em; border-top: .1em solid currentColor; padding-top: .55em; }
 .fc-stats div { display: flex; gap: .35em; justify-content: center; align-items: baseline; }
@@ -133,13 +134,8 @@ a.fut-card:hover { transform: translateY(-4px) scale(1.02); filter: brightness(1
 .empty-card { --bgc: repeating-linear-gradient(45deg, #182131 0 10px, #141c29 10px 20px); color: var(--muted); display: grid; place-items: center; font-size: 40px; }
 
 .ct-gold { --bgc: linear-gradient(160deg, #fbe99a, #e2b743 45%, #b4841f); --ink: #3b2a05; }
-.ct-totw { --bgc: linear-gradient(160deg, #3a3a3a, #121212 55%, #050505); --ink: #f3d27a; --hl: rgba(243, 210, 122, .25); }
-.ct-otw { --bgc: linear-gradient(160deg, #ff7aa8, #b0277f 50%, #3a0b45); --ink: #fff; }
-.ct-fs { --bgc: linear-gradient(160deg, #36f1ff, #7c4dff 50%, #1b0b45); --ink: #fff; }
-.ct-tots { --bgc: linear-gradient(160deg, #7fd8ff, #1e6fd9 50%, #0b2a66); --ink: #fff6c4; }
-.ct-toty { --bgc: linear-gradient(160deg, #2a4fd1, #0a1a55 60%, #c9a227); --ink: #fae39f; }
-.ct-icon { --bgc: linear-gradient(160deg, #fffdf6, #eadfbf 55%, #c5ad73); --ink: #3a2e14; }
-.ct-prime { --bgc: linear-gradient(160deg, #ffffff, #f4e6b4 45%, #b38b2e); --ink: #241a04; }
+.ct-silver { --bgc: linear-gradient(160deg, #f4f6f8, #c4cbd3 50%, #8d97a3); --ink: #1f262e; }
+.ct-bronze { --bgc: linear-gradient(160deg, #f0c39a, #c2804d 50%, #7d4a26); --ink: #2a1607; }
 
 .mini-card { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; width: 38px; height: 46px; border-radius: 8px 8px 14px 14px; background: var(--bgc); color: var(--ink, #3b2a05); line-height: 1; font-family: var(--display); flex: none; }
 .mini-card b { font-size: 16px; } .mini-card i { font-style: normal; font-size: 10px; font-weight: 600; margin-top: 2px; }
@@ -222,6 +218,8 @@ a.fut-card:hover { transform: translateY(-4px) scale(1.02); filter: brightness(1
 .crumbs { font-size: .85rem; color: var(--muted); margin-bottom: 12px; }
 .player-hero { display: grid; grid-template-columns: auto 1fr auto; gap: 28px; align-items: start; padding: 24px; }
 .ph-info h1 { font-size: 2.2rem; margin-bottom: 6px; }
+.ph-meta a { color: var(--muted); }
+.ph-meta a:hover { color: var(--text); }
 .ph-meta { display: flex; gap: 14px; flex-wrap: wrap; color: var(--muted); margin-bottom: 14px; }
 .facts { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; margin: 0 0 14px; }
 .facts div { background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; }
@@ -229,6 +227,8 @@ a.fut-card:hover { transform: translateY(-4px) scale(1.02); filter: brightness(1
 .facts dd { margin: 2px 0 0; font-weight: 700; }
 .playstyles { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
 .ps { font-size: .78rem; font-weight: 600; padding: 4px 10px; border-radius: 999px; background: var(--panel-2); border: 1px solid var(--line-2); }
+.ps { color: var(--text); }
+a.ps:hover { text-decoration: none; border-color: var(--muted); }
 .ps.plus { border-color: var(--gold); color: var(--gold); background: rgba(242, 201, 76, .08); }
 .ph-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 .ph-price { background: var(--bg-2); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; min-width: 210px; display: flex; flex-direction: column; gap: 6px; }
@@ -238,6 +238,11 @@ a.fut-card:hover { transform: translateY(-4px) scale(1.02); filter: brightness(1
 .version { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center; padding: 6px; border-radius: 10px; color: var(--text); border: 1px solid transparent; }
 .version:hover { background: var(--panel-2); text-decoration: none; }
 .version.on { border-color: var(--accent); background: rgba(25, 230, 140, .06); }
+.top-attrs { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 14px; }
+.top-attrs div { display: flex; justify-content: space-between; align-items: center; padding: 6px 10px; background: var(--bg-2); border: 1px solid var(--line); border-radius: 8px; font-size: .88rem; }
+.spinner { width: 32px; height: 32px; margin: 0 auto 12px; border: 3px solid var(--line-2); border-top-color: var(--accent); border-radius: 50%; animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.filters select:disabled { opacity: .5; }
 .rating-history { display: flex; align-items: flex-end; gap: 10px; height: 130px; padding-top: 10px; }
 .rh { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 4px; color: var(--text); height: 100%; }
 .rh:hover { text-decoration: none; }

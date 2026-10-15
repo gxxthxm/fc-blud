@@ -1,6 +1,6 @@
 // FUT-style player card and compact row renderers.
 
-import { CARD_TYPES, CLUBS, NATIONS, STAT_LABELS, GK_STAT_LABELS } from '../data/meta.js';
+import { CARD_TYPES, STAT_LABELS, GK_STAT_LABELS, nationOf, clubShort, PLAYER_IMAGE_URL } from '../data/meta.js';
 import { esc, initials } from '../utils.js';
 
 export const statLabels = (card) => (card.player.isGK ? GK_STAT_LABELS : STAT_LABELS);
@@ -10,8 +10,8 @@ export const typeOf = (card) => CARD_TYPES[card.type];
 export function renderCard(card, { size = 'md', link = true } = {}) {
   const p = card.player;
   const t = CARD_TYPES[card.type];
-  const nation = NATIONS[p.nation];
-  const club = CLUBS[card.club]?.short || '';
+  const nation = nationOf(p.nation);
+  const club = clubShort(card.club);
   const labels = statLabels(card);
   const tag = link ? 'a' : 'div';
   const href = link ? ` href="${cardHref(card)}"` : '';
@@ -20,15 +20,15 @@ export function renderCard(card, { size = 'md', link = true } = {}) {
     <div class="fc-left">
       <div class="fc-ovr">${card.ovr}</div>
       <div class="fc-pos">${esc(p.pos)}</div>
-      <div class="fc-flag" title="${esc(nation?.name)}">${nation?.flag || ''}</div>
+      <div class="fc-flag" title="${esc(nation.name)}">${nation.flag}</div>
       <div class="fc-club">${esc(club)}</div>
     </div>
-    <div class="fc-face" aria-hidden="true"><span>${esc(initials(p.name))}</span></div>
+    <div class="fc-face" aria-hidden="true"><span>${esc(initials(p.name))}</span>${PLAYER_IMAGE_URL
+      ? `<img src="${esc(PLAYER_IMAGE_URL.replace('{id}', encodeURIComponent(p.id)))}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">` : ''}</div>
     <div class="fc-name">${esc(p.name)}</div>
     <div class="fc-stats">
       ${card.stats.map((s, i) => `<div><b>${s}</b><span>${labels[i]}</span></div>`).join('')}
     </div>
-    ${card.type !== 'gold' ? `<div class="fc-badge">${esc(t.short)}</div>` : ''}
   </${tag}>`;
 }
 

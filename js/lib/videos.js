@@ -5,7 +5,7 @@
 // real videos and plays them inline; without one, each topic links to a YouTube search.
 
 import { state } from '../state.js';
-import { gameById, CARD_TYPES, groupOf } from '../data/meta.js';
+import { gameById, groupOf } from '../data/meta.js';
 import { esc } from '../utils.js';
 
 const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
@@ -20,8 +20,7 @@ const POSITION_TOPICS = {
 export function topicsForCard(card) {
   const p = card.player;
   const g = gameById(card.game).short;
-  const t = CARD_TYPES[card.type];
-  const promo = card.type === 'gold' || card.type === 'icon' ? '' : ` ${t.label}`;
+  const promo = '';
   const topics = [
     { q: `${p.fullName}${promo} ${g} player review`, label: `${p.name}${promo} review`, kind: 'Review', why: 'In-game review of this exact card' },
     { q: `${p.name} best chemistry style ${g}`, label: `Best chem style for ${p.name}`, kind: 'Build', why: `Get the most out of a ${p.pos}` },

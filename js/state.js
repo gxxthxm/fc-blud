@@ -1,13 +1,11 @@
 // Global app state persisted to localStorage (game, platform, watchlist, squad, API key).
 
 import { store } from './utils.js';
-import { CURRENT_GAME, GAMES } from './data/meta.js';
 
 const listeners = new Set();
-const savedGame = store.get('game', CURRENT_GAME);
 
 export const state = {
-  game: GAMES.some((g) => g.id === savedGame) ? savedGame : CURRENT_GAME,
+  game: store.get('game', null), // validated against the loaded editions at startup
   platform: store.get('platform', 'console'),
   watchlist: store.get('watchlist', []),
   squad: store.get('squad', {}), // { [gameId]: { formation, slots: { [index]: cardId } } }
