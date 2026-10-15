@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FC Hub — EA FC &amp; FIFA companion</title>
+  <meta name="description" content="Player database, market trends, news and rumors, squad builder and video picks for EA SPORTS FC and FIFA.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚽</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Oswald:wght@500;600;700&display=swap">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <button id="menuBtn" class="icon-btn menu-btn" aria-label="Menu">☰</button>
+      <a href="#/" class="brand"><span class="brand-mark">FC</span>Hub</a>
+      <nav id="nav" class="nav">
+        <a href="#/" data-nav="home">Home</a>
+        <a href="#/players" data-nav="players">Players</a>
+        <a href="#/market" data-nav="market">Market</a>
+        <a href="#/news" data-nav="news">News &amp; Rumors</a>
+        <a href="#/features" data-nav="features">Features</a>
+        <a href="#/squad" data-nav="squad">Squad Builder</a>
+        <a href="#/compare" data-nav="compare">Compare</a>
+      </nav>
+      <form class="global-search" role="search">
+        <input id="globalSearch" type="search" placeholder="Search players  /" autocomplete="off" aria-label="Search players">
+      </form>
+      <div class="selectors">
+        <select id="gameSelect" aria-label="Game"></select>
+        <select id="platformSelect" aria-label="Platform">
+          <option value="console">Console</option>
+          <option value="pc">PC</option>
+        </select>
+        <a href="#/settings" class="icon-btn" data-nav="settings" aria-label="Settings" title="Settings">⚙</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="container"></main>
+
+  <footer class="footer container">
+    <p>FC Hub is an unofficial fan companion — not affiliated with EA SPORTS or FIFA. Ratings, prices and stories in this build are demo data.</p>
+  </footer>
+
+  <div id="modal" class="modal" hidden></div>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

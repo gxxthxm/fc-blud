@@ -1,0 +1,15 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "fc-hub",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": [
+        "-I",
+        "-c",
+        "import functools, http.server; h = functools.partial(http.server.SimpleHTTPRequestHandler, directory='/Users/gauthemkrishnapersonal/Desktop/EAFC App'); http.server.ThreadingHTTPServer(('127.0.0.1', 5173), h).serve_forever()"
+      ],
+      "port": 5173
+    }
+  ]
+}
